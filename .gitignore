@@ -1,2 +1,6 @@
 MyCLIPackages.egg-info
 my_cli_package/__pycache__
+dist
+build
+docker/mongo/data
+docker/mysql/data
