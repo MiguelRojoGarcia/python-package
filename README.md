@@ -28,4 +28,15 @@ https://python-packaging-tutorial.readthedocs.io/en/latest/setup_py.html
 
 ## Test:
 
-In order to test you have some environments in docker folder
+Your have to install globally pytest : 
+
+```
+pip install -U pytest
+```
+
+
+Then execute tests by 
+
+```
+pytest -s
+```

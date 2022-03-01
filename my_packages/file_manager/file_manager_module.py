@@ -23,17 +23,16 @@ class FileManagerModule:
         if dirPath != None:
             fullDir = f"{self.__working_directory}/{fullDir}"
 
-        print(os.stat(fullDir))
+        return os.path.exists(dirPath)
 
-        return os.path.isdir(fullDir)
-
-    def dirCreate(self , dirPath):
+    def dirCreate(self , dirPath , permission = 775):
       
         dirPath = f"{self.__working_directory}/{dirPath}"
-      
-        print("\ndirCreate" , dirPath , str( self.dirExist(dirPath)))
 
-        return True
+        if self.dirExist(dirPath) == False:
+            os.makedirs(dirPath, permission)
+            
+        return self.dirExist(dirPath)
 
     def dirRemove(self , dirPath):
 
@@ -64,9 +63,7 @@ class FileManagerModule:
         return content
 
     def fileExist(self , file_path):
-        
         file_path = f"{self.__working_directory}/{file_path}"
-       
         return os.path.isfile(file_path)
 
     def fileWrite(self , path,txt):
@@ -76,7 +73,7 @@ class FileManagerModule:
         result = True
 
         try:
-            fileManager = io.open(path, "a+")
+            fileManager = io.open(path, "a")
             fileManager.write(txt)
             fileManager.close()
         except:
@@ -109,7 +106,6 @@ class FileManagerModule:
     def fileCopy(self,origin_path,destiny_path):
        
         origin_path = f"{self.__working_directory}/{origin_path}"
-       
         destiny_path = f"{self.__working_directory}/{destiny_path}"
 
         if self.fileExist(origin_path) == True:
@@ -128,7 +124,7 @@ class FileManagerModule:
 
         path = f"{self.__working_directory}/{path}"
       
-        if self.fileExist(path):
+        if self.fileExist(path) == True:
             os.remove(path)
         
         return self.fileExist(path) == False
