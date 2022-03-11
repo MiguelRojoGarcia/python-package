@@ -8,19 +8,15 @@ class MysqlConnectorModule:
     ## Constructor
     def __init__(self , username , password , database , host = 'localhost' , port = 3306) ->None:
      
-        try:
-            self.__connection = mysql.connector.connect(
+        self.__connection = mysql.connector.connect(
                 user= username, 
                 password= password,
-                host= database,
-                database=host,
+                host= host,
+                database=database,
                 port= port
             )
 
-            self.__cursor = self.__connection.cursor(dictionary=True , buffered=True)
-
-        except Exception as e:
-            print(f"Error connection to server {host}:{port} - {database} {e}")
+        self.__cursor = self.__connection.cursor(dictionary=True , buffered=True)
 
     ## Execute single query (INSERT ,  DELETE , ...)
     def executeQuery(self , query):
