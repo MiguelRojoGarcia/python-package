@@ -1,8 +1,8 @@
 from my_packages.file_manager import file_manager_module
 from my_packages.file_manager.file_manager_module import FileManagerModule
 
-testFolder = 'tests'
-common_file_manager = FileManagerModule(testFolder)
+test_folder = 'tests'
+common_file_manager = FileManagerModule(test_folder)
 
 def test_init_instance_with_folder():
     assert common_file_manager.working_directory != ''
@@ -13,13 +13,20 @@ def test_init_instance_without_folder():
 
 def test_dir_exist():
     file_manager = FileManagerModule('')
-    assert file_manager.dirExist()
+    assert file_manager.dirExist(test_folder)
 
-def test_dir_exist():
+def test_dir_non_exist():
     assert common_file_manager.dirExist('non-existing-dir') == False
 
 def test_create_folder():
     assert common_file_manager.dirCreate('pytest-folder')
+
+def test_get_dir_content():
+    common_file_manager.fileWrite('test_dir_content_1.txt','Test 1\n')
+    common_file_manager.fileWrite('test_dir_content_2.txt','Test 2\n')
+    common_file_manager.fileWrite('test_dir_content_3.txt','Test 3\n')
+    content = common_file_manager.dirGetContent()
+    assert len(content) > 0
 
 def test_create_file():
     assert common_file_manager.fileWrite('text.txt','Test text!\n')

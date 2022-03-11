@@ -16,54 +16,54 @@ class FileManagerModule:
     def working_directory(self):
         return self.__working_directory
 
-    def dirExist(self , dirPath = None):
+    def dirExist(self , dir_path):
+        return os.path.exists(dir_path)
 
-        fullDir = self.__working_directory
-        
-        if dirPath != None:
-            fullDir = f"{self.__working_directory}/{fullDir}"
-
-        return os.path.exists(dirPath)
-
-    def dirCreate(self , dirPath , permission = 775):
+    def dirCreate(self , dir_path , permission = 775):
       
-        dirPath = f"{self.__working_directory}/{dirPath}"
+        dir_path = f"{self.__working_directory}/{dir_path}"
 
-        if self.dirExist(dirPath) == False:
-            os.makedirs(dirPath, permission)
+        if self.dirExist(dir_path) == False:
+            os.makedirs(dir_path, permission)
             
-        return self.dirExist(dirPath)
+        return self.dirExist(dir_path)
 
-    def dirRemove(self , dirPath):
+    def dirRemove(self , dir_path):
 
-        dirPath = f"{self.__working_directory}/{dirPath}"
+        dir_path = f"{self.__working_directory}/{dir_path}"
         
-        if self.dirExist(dirPath) == True:
-            shutil.rmtree(dirPath)
+        if self.dirExist(dir_path) == True:
+            shutil.rmtree(dir_path)
         
-        return self.dirExist(dirPath) == False
+        return self.dirExist(dir_path) == False
 
-    def dirCopy(self , originDirPath,destinyDirPath):
+    def dirCopy(self , origindir_path,destinydir_path):
         
-        originDirPath = f"{self.__working_directory}/{originDirPath}"
+        origindir_path = f"{self.__working_directory}/{origindir_path}"
         
-        destinyDirPath = f"{self.__working_directory}/{destinyDirPath}"
+        destinydir_path = f"{self.__working_directory}/{destinydir_path}"
         
-        shutil.copytree(originDirPath,destinyDirPath)
+        shutil.copytree(origindir_path,destinydir_path)
 
-    def dirGetContent(self , dirPath):
+    def dirGetContent(self , dir_path = None):
         
         content = []
-       
-        dirPath = f"{self.__working_directory}/{dirPath}"
-       
-        if self.dirExist(dirPath):
-            content = os.listdir(dirPath)
+
+        if dir_path != None:
+            dir_path = f"{self.__working_directory}/{dir_path}"
+        else:
+            dir_path = f"{self.__working_directory}"
+
+        if self.dirExist(dir_path):
+            content = os.listdir(dir_path)
 
         return content
 
-    def fileExist(self , file_path):
-        file_path = f"{self.__working_directory}/{file_path}"
+    def fileExist(self , file_path , use_working_directory = True):
+
+        if use_working_directory == True:
+            file_path = f"{self.__working_directory}/{file_path}"
+        
         return os.path.isfile(file_path)
 
     def fileWrite(self , path,txt):
@@ -73,15 +73,15 @@ class FileManagerModule:
         result = True
 
         try:
-            fileManager = io.open(path, "a")
-            fileManager.write(txt)
-            fileManager.close()
+            file_handler = io.open(path, "a")
+            file_handler.write(txt)
+            file_handler.close()
         except:
             result = False    
         
         return result
 
-    def fileGetContent(self , path , asList = False):
+    def fileGetContent(self , path , as_list = False):
 
         path = f"{self.__working_directory}/{path}"
 
@@ -89,14 +89,14 @@ class FileManagerModule:
 
         try:
 
-            fileManager = io.open(path, "r")
+            file_handler = io.open(path, "r")
 
-            if asList == True:
-                file_content=fileManager.readlines()
+            if as_list == True:
+                file_content=file_handler.readlines()
             else:
-                file_content=fileManager.read()
+                file_content=file_handler.read()
             
-            fileManager.close()
+            file_handler.close()
 
         except:
             file_content = None    
@@ -104,11 +104,11 @@ class FileManagerModule:
         return file_content
 
     def fileCopy(self,origin_path,destiny_path):
-       
+        
         origin_path = f"{self.__working_directory}/{origin_path}"
         destiny_path = f"{self.__working_directory}/{destiny_path}"
 
-        if self.fileExist(origin_path) == True:
+        if self.fileExist(origin_path , False) == True:
             shutil.copyfile(origin_path , destiny_path)
 
     def fileRename(self , origin_path,destiny_path):
