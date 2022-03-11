@@ -2,30 +2,25 @@ import mysql.connector
 
 class MysqlConnectorModule:
     
-    __db_user = None
-    __db_pass = None
-    __db_name = None
-    __db_host = None
-
     __cursor = None 
     __connection = None 
 
     ## Constructor
-    def __init__(self , db_user , db_pass , db_name , db_host = 'localhost' , port = 3306) ->None:
+    def __init__(self , username , password , database , host = 'localhost' , port = 3306) ->None:
      
         try:
             self.__connection = mysql.connector.connect(
-                user= db_user, 
-                password= db_pass,
-                host= db_host,
-                database=db_name,
+                user= username, 
+                password= password,
+                host= database,
+                database=host,
                 port= port
             )
 
             self.__cursor = self.__connection.cursor(dictionary=True , buffered=True)
 
         except Exception as e:
-            print(f"Error connection to server {db_host}:{port} - {db_name} {e}")
+            print(f"Error connection to server {host}:{port} - {database} {e}")
 
     ## Execute single query (INSERT ,  DELETE , ...)
     def executeQuery(self , query):

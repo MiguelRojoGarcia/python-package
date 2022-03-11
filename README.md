@@ -34,9 +34,10 @@ Your have to install globally pytest :
 pip install -U pytest
 ```
 
-
 Then execute tests by 
 
 ```
 pytest -s
 ```
+
+Note : Create tests folder in root project before execute tests
