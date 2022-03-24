@@ -30,7 +30,8 @@ def test_execute_query():
             id INTEGER PRIMARY KEY AUTO_INCREMENT, 
             name varchar(255) not null, 
             surname varchar(255) not null, 
-            email varchar(255) not null
+            email varchar(255) not null,
+            password varchar(255) not null
         )"""
 
         common_mysql_connector.executeQuery(query)
@@ -38,15 +39,6 @@ def test_execute_query():
         query = """TRUNCATE TABLE test_users"""
 
         common_mysql_connector.executeQuery(query)
-
-        users = [
-            {'name':'Miguel','surname':'Rojo','email':'mrojo@gmail.es'},
-            {'name':'Marco','surname':'Guerrero','email':'mguerrero@gmail.es'}
-        ]
-
-        for user in users:
-            insertQuery = f"INSERT INTO test_users (name , surname , email) VALUES (\"{user['name']}\" , \"{user['surname']}\", \"{user['email']}\")"
-            common_mysql_connector.executeQuery(insertQuery)
 
         assert True
 
@@ -57,9 +49,13 @@ def test_get_unique_result():
 
     try:
 
-       insertQuery = f"INSERT INTO test_users (name , surname , email) VALUES ('Marta' , 'Guerrero', 'mgerrero@test.es')"
-       common_mysql_connector.executeQuery(insertQuery)
-
+       common_mysql_connector.insertRecord('test_users',{
+           'name':'marta',
+           'surname':'Guerrero',
+           'email':'mgerrero@test.es',
+           'password':common_mysql_connector.encryptString('M4rt4!')
+        })
+ 
        result = common_mysql_connector.getResults("SELECT * FROM test_users WHERE email = 'mgerrero@test.es'" , True )
        
        assert type(result) == dict
@@ -68,7 +64,6 @@ def test_get_unique_result():
         assert False
 
 def test_get_results():
-
     try:
 
        result = common_mysql_connector.getResults("SELECT * FROM test_users")
@@ -77,3 +72,22 @@ def test_get_results():
 
     except:
         assert False
+
+def test_insert_record():
+
+    try:
+
+        users = [
+            {'name':'Miguel','surname':'Rojo','email':'mrojo@gmail.es','password': common_mysql_connector.encryptString('M1gu3l!')},
+            {'name':'Marco','surname':'Guerrero','email':'mguerrero@gmail.es','password': common_mysql_connector.encryptString('M4rc0!')}
+        ]
+
+        for user in users:
+            common_mysql_connector.insertRecord('test_users',user)
+    
+        assert True
+
+    except:
+        assert False
+
+   

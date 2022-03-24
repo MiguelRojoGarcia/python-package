@@ -1,4 +1,6 @@
+import string
 import mysql.connector
+import hashlib
 
 class MysqlConnectorModule:
     
@@ -27,6 +29,12 @@ class MysqlConnectorModule:
         except Exception as e:
             print(f"Error executing query {query} - {e}")
     
+    # Cypher str (for password storage or delicate info)
+    def encryptString(self,str = ''):
+        cypher = hashlib.sha256()
+        cypher.update(str.encode('utf8'))
+        return cypher.hexdigest()
+
     ## Get data query (SELECT)
     def getResults(self , query , get_first = False):
         try:
@@ -40,6 +48,22 @@ class MysqlConnectorModule:
         except Exception as e:
             print(f"Error executing query {query} - {e}")
     
+    #Insert record 
+    def insertRecord(self, table, data = dict):
+
+        sql = f'INSERT INTO {table} VALUES ( null '
+        
+        dict_keys = data.keys()
+
+        for key in dict_keys:
+            sql += f',\'{data[key]}\''
+
+        sql += ' )'
+
+        self.executeQuery(sql)
+
+        pass
+
     ## Close connection
     def closeConnection(self):
         self.__connection.close()
